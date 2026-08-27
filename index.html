@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Calificador de Servicio - Estol Equipos Médicos</title>
+    <meta name="description" content="Kiosk de satisfacción del cliente para tablet - Estol Equipos Médicos">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Estol CSAT">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <!-- Ambient background glows -->
+    <div class="bg-ambient-orb orb-1"></div>
+    <div class="bg-ambient-orb orb-2"></div>
+
+    <!-- Canvas de Confeti -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <div class="kiosk-app">
+        <!-- HEADER -->
+        <header class="kiosk-header">
+            <div class="brand-wrapper" id="brandLogoTrigger" title="Toca 3 veces para entrar como Administrador">
+                <div class="brand-logo-container">
+                    <img src="assets/logo.png" alt="Estol Equipos Médicos" class="brand-logo-img" onerror="this.src='assets/estol_logo.jpg'; this.onerror=null;">
+                </div>
+                <div class="brand-info">
+                    <h1 id="headerEmpresa">Estol Equipos Médicos</h1>
+                    <p id="headerSubtitulo">Ortopedia & Rehabilitación</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="status-badge" id="onlineBadge">
+                    <span class="status-dot"></span>
+                    <span id="onlineText">Kiosk Activo</span>
+                </div>
+                <button class="btn-icon-kiosk" id="btnSoundToggle" title="Sonido On/Off">
+                    🔊
+                </button>
+                <button class="btn-icon-kiosk" id="btnFullscreen" title="Pantalla Completa">
+                    ⛶
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN KIOSK CONTENT VIEWS -->
+        <main class="kiosk-main-content">
+
+            <!-- ==============================================
+                 VISTA 1: CALIFICACIÓN PRINCIPAL (3 BOTONES)
+                 ============================================== -->
+            <section id="viewRating" class="view-section active">
+                <div class="rating-prompt">
+                    <span class="badge-tag">Tu opinión nos importa</span>
+                    <h2>¿Cómo calificarías tu experiencia hoy?</h2>
+                    <p>Toca la opción que mejor represente nuestra atención</p>
+                </div>
+
+                <div class="rating-buttons-grid">
+                    <!-- BOTÓN 1: FELIZ (EXCELENTE) -->
+                    <button class="rate-card card-happy" data-rating="excelente" data-score="3" id="btnHappy">
+                        <div class="face-icon-wrapper">
+                            <svg class="face-emoji-svg" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="46" fill="url(#happyGrad)" stroke="#10b981" stroke-width="4"/>
+                                <circle cx="34" cy="40" r="6" fill="#065f46"/>
+                                <circle cx="66" cy="40" r="6" fill="#065f46"/>
+                                <circle cx="36" cy="38" r="2" fill="#ffffff"/>
+                                <circle cx="68" cy="38" r="2" fill="#ffffff"/>
+                                <!-- Sonrisa amplia y alegre -->
+                                <path d="M 28 56 Q 50 82 72 56" fill="#065f46" stroke="#065f46" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M 34 58 Q 50 74 66 58" fill="#ffffff"/>
+                                <!-- Mejillas sonrosadas -->
+                                <ellipse cx="26" cy="50" rx="6" ry="3.5" fill="#f87171" opacity="0.5"/>
+                                <ellipse cx="74" cy="50" rx="6" ry="3.5" fill="#f87171" opacity="0.5"/>
+                                <defs>
+                                    <linearGradient id="happyGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#fef08a"/>
+                                        <stop offset="100%" stop-color="#facc15"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3 class="rate-label">Excelente</h3>
+                        <p class="rate-sub">Muy conforme con el servicio</p>
+                    </button>
+
+                    <!-- BOTÓN 2: SERIA (REGULAR) -->
+                    <button class="rate-card card-neutral" data-rating="regular" data-score="2" id="btnNeutral">
+                        <div class="face-icon-wrapper">
+                            <svg class="face-emoji-svg" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="46" fill="url(#neutralGrad)" stroke="#f59e0b" stroke-width="4"/>
+                                <circle cx="35" cy="42" r="5.5" fill="#78350f"/>
+                                <circle cx="65" cy="42" r="5.5" fill="#78350f"/>
+                                <!-- Línea de boca recta/neutra -->
+                                <line x1="32" y1="64" x2="68" y2="64" stroke="#78350f" stroke-width="5.5" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="neutralGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#fef08a"/>
+                                        <stop offset="100%" stop-color="#fbbf24"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3 class="rate-label">Regular</h3>
+                        <p class="rate-sub">El servicio fue normal</p>
+                    </button>
+
+                    <!-- BOTÓN 3: DISGUSTADA (MALA) -->
+                    <button class="rate-card card-sad" data-rating="mala" data-score="1" id="btnSad">
+                        <div class="face-icon-wrapper">
+                            <svg class="face-emoji-svg" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="46" fill="url(#sadGrad)" stroke="#ef4444" stroke-width="4"/>
+                                <!-- Ojos y cejas inclinadas disgustadas -->
+                                <path d="M 28 34 Q 36 38 42 37" stroke="#7f1d1d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                                <path d="M 72 34 Q 64 38 58 37" stroke="#7f1d1d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                                <circle cx="35" cy="44" r="5" fill="#7f1d1d"/>
+                                <circle cx="65" cy="44" r="5" fill="#7f1d1d"/>
+                                <!-- Boca curva hacia abajo -->
+                                <path d="M 30 70 Q 50 52 70 70" stroke="#7f1d1d" stroke-width="5" fill="none" stroke-linecap="round"/>
+                                <defs>
+                                    <linearGradient id="sadGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#fee2e2"/>
+                                        <stop offset="100%" stop-color="#fca5a5"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h3 class="rate-label">Disgustado</h3>
+                        <p class="rate-sub">No cumplió mis expectativas</p>
+                    </button>
+                </div>
+            </section>
+
+
+            <!-- ==============================================
+                 VISTA 2: FELIZ / RESEÑA EN GOOGLE (QR)
+                 ============================================== -->
+            <section id="viewHappy" class="view-section">
+                <div class="happy-card-container">
+                    <div class="thank-you-badge">✨</div>
+                    <h2 class="happy-title">¡Muchas gracias por tu visita!</h2>
+                    <p class="happy-subtitle">Nos alegra muchísimo que hayas tenido una gran experiencia con Estol.</p>
+
+                    <!-- Caja con QR de Google Reviews -->
+                    <div class="google-review-box">
+                        <div class="qr-code-wrapper" id="googleQrContainer">
+                            <!-- QR Generado con qrcode.js -->
+                        </div>
+                        <div class="google-prompt-text">
+                            <div class="stars">★★★★★</div>
+                            <h3>¿Nos apoyarías con tu reseña en Google?</h3>
+                            <p>Escanea este código QR con tu celular o pulsa el botón para ayudarnos a que más personas nos conozcan.</p>
+                            <a href="#" target="_blank" class="google-link-btn" id="btnDirectGoogleReview">
+                                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                                Calificar en Google Maps
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Auto-reinicio -->
+                    <div class="countdown-container">
+                        <span>Volviendo al inicio en <b id="countdownSecondsHappy">5</b>s</span>
+                        <div class="countdown-bar-wrapper">
+                            <div class="countdown-bar-fill" id="countdownFillHappy"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ==============================================
+                 VISTA 3: FEEDBACK INTERNO (REGULAR / DISGUSTADO)
+                 ============================================== -->
+            <section id="viewFeedback" class="view-section">
+                <div class="feedback-card-container">
+                    <div class="feedback-icon-header" id="feedbackHeaderIcon">💬</div>
+                    <h2 class="feedback-title" id="feedbackTitleText">¿Qué aspecto podemos mejorar?</h2>
+                    <p class="feedback-subtitle">Selecciona uno o más motivos para que podamos brindarte una mejor atención.</p>
+
+                    <div class="motivos-tags-grid" id="motivosContainer">
+                        <!-- Generado dinámicamente según config -->
+                    </div>
+
+                    <textarea id="feedbackComment" class="feedback-comment-input" rows="2" placeholder="Comentario o sugerencia adicional (opcional)..."></textarea>
+
+                    <div class="feedback-actions">
+                        <button class="btn-secondary" id="btnSkipFeedback">Omitir y finalizar</button>
+                        <button class="btn-primary" id="btnSubmitFeedback">Enviar Opinión</button>
+                    </div>
+
+                    <!-- Auto-reinicio -->
+                    <div class="countdown-container">
+                        <span>Reinicio automático en <b id="countdownSecondsFeedback">12</b>s</span>
+                        <div class="countdown-bar-wrapper">
+                            <div class="countdown-bar-fill" id="countdownFillFeedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ==============================================
+                 VISTA 4: AGRADECIMIENTO FINAL
+                 ============================================== -->
+            <section id="viewThanks" class="view-section">
+                <div class="happy-card-container">
+                    <div class="thank-you-badge">🤝</div>
+                    <h2 class="happy-title">¡Gracias por ayudarnos a mejorar!</h2>
+                    <p class="happy-subtitle">Tu opinión ha sido registrada y nos ayuda a elevar la calidad de nuestros servicios y equipamiento.</p>
+
+                    <div class="countdown-container">
+                        <span>Volviendo al inicio en <b id="countdownSecondsThanks">3</b>s</span>
+                        <div class="countdown-bar-wrapper">
+                            <div class="countdown-bar-fill" id="countdownFillThanks"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER / KIOSK BAR -->
+        <footer class="kiosk-footer">
+            <span class="footer-branch" id="footerBranchText">📍 Casa Central - Martín García 1282</span>
+            <span>Estol Equipos Médicos • Sistema de Calidad</span>
+            <span class="footer-admin-trigger" id="footerAdminTrigger">⚙️ Admin</span>
+        </footer>
+    </div>
+
+
+    <!-- ==============================================
+         MODAL DE ADMINISTRACIÓN Y ESTADÍSTICAS
+         ============================================== -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="admin-modal-card">
+            <div class="admin-modal-header">
+                <h2>Panel de Administración y Estadísticas CSAT</h2>
+                <button class="btn-close-modal" id="btnCloseAdminModal">✕</button>
+            </div>
+
+            <div class="admin-modal-body">
+                <!-- PANTALLA 1: PIN DE ACCESO -->
+                <div id="adminPinSection" class="pin-entry-container">
+                    <h3>Ingresa el PIN de Administrador</h3>
+                    <p style="color: #64748b; font-size: 14px; margin-top: 4px;">PIN por defecto: <b>1234</b></p>
+                    <div class="pin-display">
+                        <span class="pin-dot"></span>
+                        <span class="pin-dot"></span>
+                        <span class="pin-dot"></span>
+                        <span class="pin-dot"></span>
+                    </div>
+                    <div class="numpad-grid">
+                        <button class="num-btn" data-num="1">1</button>
+                        <button class="num-btn" data-num="2">2</button>
+                        <button class="num-btn" data-num="3">3</button>
+                        <button class="num-btn" data-num="4">4</button>
+                        <button class="num-btn" data-num="5">5</button>
+                        <button class="num-btn" data-num="6">6</button>
+                        <button class="num-btn" data-num="7">7</button>
+                        <button class="num-btn" data-num="8">8</button>
+                        <button class="num-btn" data-num="9">9</button>
+                        <button class="num-btn" id="btnPinClear">C</button>
+                        <button class="num-btn" data-num="0">0</button>
+                        <button class="num-btn" id="btnPinDelete">⌫</button>
+                    </div>
+                </div>
+
+                <!-- PANTALLA 2: DASHBOARD DE ESTADÍSTICAS -->
+                <div id="adminDashboardSection" style="display: none;">
+                    <!-- Métricas globales -->
+                    <div class="stats-summary-grid">
+                        <div class="stat-metric-card">
+                            <div class="metric-val" id="metricTotal">0</div>
+                            <div class="metric-lbl">Total Opiniones</div>
+                        </div>
+                        <div class="stat-metric-card">
+                            <div class="metric-val" style="color: #10b981;" id="metricCSAT">0%</div>
+                            <div class="metric-lbl">Índice Satisfacción</div>
+                        </div>
+                        <div class="stat-metric-card">
+                            <div class="metric-val" style="color: #059669;" id="metricHappy">0</div>
+                            <div class="metric-lbl">😃 Excelentes</div>
+                        </div>
+                        <div class="stat-metric-card">
+                            <div class="metric-val" style="color: #dc2626;" id="metricSad">0</div>
+                            <div class="metric-lbl">🙁 Disgustados / Regulares</div>
+                        </div>
+                    </div>
+
+                    <!-- Distribución Porcentual -->
+                    <div class="distribution-bars">
+                        <div class="dist-item">
+                            <div class="dist-header">
+                                <span>😃 Excelente (<span id="pctHappy">0%</span>)</span>
+                                <span id="countHappy">0</span>
+                            </div>
+                            <div class="dist-track">
+                                <div class="dist-fill fill-happy" id="barHappy" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="dist-item">
+                            <div class="dist-header">
+                                <span>😐 Regular (<span id="pctNeutral">0%</span>)</span>
+                                <span id="countNeutral">0</span>
+                            </div>
+                            <div class="dist-track">
+                                <div class="dist-fill fill-neutral" id="barNeutral" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                        <div class="dist-item">
+                            <div class="dist-header">
+                                <span>😡 Disgustado (<span id="pctSad">0%</span>)</span>
+                                <span id="countSad">0</span>
+                            </div>
+                            <div class="dist-track">
+                                <div class="dist-fill fill-sad" id="barSad" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acciones y Exportación -->
+                    <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+                        <button class="btn-primary" id="btnExportCSV" style="padding: 10px 20px; font-size: 14px;">📥 Exportar a Excel (CSV)</button>
+                        <button class="btn-secondary" id="btnEditConfig" style="padding: 10px 20px; font-size: 14px;">⚙️ Configurar Enlace Google / PIN</button>
+                    </div>
+
+                    <!-- Tabla de últimas opiniones -->
+                    <h4 style="margin-bottom: 10px; font-size: 16px; color: #1e293b;">Últimas 10 Calificaciones</h4>
+                    <div style="overflow-x: auto;">
+                        <table class="recent-votes-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha y Hora</th>
+                                    <th>Calificación</th>
+                                    <th>Motivos de Mejora</th>
+                                    <th>Comentarios</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableVotesBody">
+                                <tr><td colspan="4" style="text-align: center; color: #94a3b8;">No hay calificaciones registradas aún</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PANTALLA 3: CONFIGURACIÓN -->
+                <div id="adminConfigSection" style="display: none; max-width: 600px; margin: 0 auto;">
+                    <h3 style="margin-bottom: 18px;">Configuración del Kiosk</h3>
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        <label style="font-weight: 600; font-size: 14px;">
+                            Enlace de Google Maps / Reseñas (se genera el QR):
+                            <input type="text" id="cfgGoogleUrl" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px;">
+                        </label>
+                        <label style="font-weight: 600; font-size: 14px;">
+                            PIN de Administrador (4 dígitos):
+                            <input type="password" maxlength="6" id="cfgAdminPin" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px;">
+                        </label>
+                        <label style="font-weight: 600; font-size: 14px;">
+                            Nombre de la Sucursal:
+                            <input type="text" id="cfgSucursal" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px;">
+                        </label>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button class="btn-primary" id="btnSaveConfig" style="padding: 12px 24px;">Guardar Cambios</button>
+                            <button class="btn-secondary" id="btnBackToStats" style="padding: 12px 20px;">Volver a Estadísticas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="qrcode.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
