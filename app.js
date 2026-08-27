@@ -81,11 +81,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSaveConfig = document.getElementById('btnSaveConfig');
     const btnBackToStats = document.getElementById('btnBackToStats');
 
+    // Header & Brand Elements
+    const headerEmpresa = document.getElementById('headerEmpresa');
+    const headerSubtitulo = document.getElementById('headerSubtitulo');
+    const brandLogoImg = document.querySelector('.brand-logo-img');
+    const footerBranchText = document.getElementById('footerBranchText');
+
     // Cfg Inputs
+    const cfgEmpresa = document.getElementById('cfgEmpresa');
+    const cfgSubtitulo = document.getElementById('cfgSubtitulo');
+    const cfgSitioWeb = document.getElementById('cfgSitioWeb');
     const cfgGoogleUrl = document.getElementById('cfgGoogleUrl');
     const cfgAdminPin = document.getElementById('cfgAdminPin');
     const cfgSucursal = document.getElementById('cfgSucursal');
-    const footerBranchText = document.getElementById('footerBranchText');
+    const cfgLogoFile = document.getElementById('cfgLogoFile');
+    const cfgLogoPreview = document.getElementById('cfgLogoPreview');
+    const btnResetLogo = document.getElementById('btnResetLogo');
+    let tempCustomLogoBase64 = null;
+
+    // --- APLICAR CONFIGURACIÓN DE MARCA ---
+    function applyBrandConfig() {
+        if (headerEmpresa) headerEmpresa.textContent = APP_CONFIG.empresa || 'Calificador de Servicio';
+        if (headerSubtitulo) headerSubtitulo.textContent = APP_CONFIG.subtitulo || 'Satisfacción del Cliente';
+        if (footerBranchText) footerBranchText.textContent = '📍 ' + (APP_CONFIG.sucursalDefault || 'Casa Central');
+        if (btnDirectGoogleReview) btnDirectGoogleReview.href = APP_CONFIG.googleMapsUrl || APP_CONFIG.googleMapsQueryFallback;
+        if (APP_CONFIG.logoCustom && brandLogoImg) {
+            brandLogoImg.src = APP_CONFIG.logoCustom;
+        }
+        document.title = (APP_CONFIG.empresa || 'Calificador') + ' - Satisfacción del Cliente';
+    }
 
     // --- INICIALIZACIÓN DE LA UI ---
     function initUI() {
@@ -94,8 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             APP_CONFIG.googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=Estol+Equipos+Medicos+Martin+Garcia+Montevideo';
         }
 
-        if (footerBranchText) footerBranchText.textContent = '📍 ' + (APP_CONFIG.sucursalDefault || 'Casa Central');
-        if (btnDirectGoogleReview) btnDirectGoogleReview.href = APP_CONFIG.googleMapsUrl;
+        applyBrandConfig();
         renderMotivosTags();
         generateGoogleQR();
         updateSoundButton();
@@ -692,14 +715,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // --- CONFIGURACIÓN ADMIN ---
+    // --- CONFIGURACIÓN ADMIN Y PERSONALIZACIÓN DE MARCA ---
     if (btnEditConfig) {
         btnEditConfig.addEventListener('click', () => {
+            if (cfgEmpresa) cfgEmpresa.value = APP_CONFIG.empresa || '';
+            if (cfgSubtitulo) cfgSubtitulo.value = APP_CONFIG.subtitulo || '';
+            if (cfgSitioWeb) cfgSitioWeb.value = APP_CONFIG.sitioWeb || '';
             if (cfgGoogleUrl) cfgGoogleUrl.value = APP_CONFIG.googleMapsUrl || '';
             if (cfgAdminPin) cfgAdminPin.value = APP_CONFIG.adminPin || '1234';
             if (cfgSucursal) cfgSucursal.value = APP_CONFIG.sucursalDefault || '';
+            
+            tempCustomLogoBase64 = APP_CONFIG.logoCustom || null;
+            if (cfgLogoPreview) {
+                cfgLogoPreview.src = tempCustomLogoBase64 || (brandLogoImg ? brandLogoImg.src : '');
+            }
+
             if (adminDashboardSection) adminDashboardSection.style.display = 'none';
             if (adminConfigSection) adminConfigSection.style.display = 'block';
+        });
+    }
+
+    // Subida de imagen de logo (FileReader a Base64)
+    if (cfgLogoFile) {
+        cfgLogoFile.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (loadEvt) => {
+                    tempCustomLogoBase64 = loadEvt.target.result;
+                    if (cfgLogoPreview) cfgLogoPreview.src = tempCustomLogoBase64;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    if (btnResetLogo) {
+        btnResetLogo.addEventListener('click', () => {
+            tempCustomLogoBase64 = '';
+            if (cfgLogoFile) cfgLogoFile.value = '';
+            if (cfgLogoPreview) {
+                cfgLogoPreview.src = 'assets/logo.png';
+            }
         });
     }
 
@@ -713,16 +770,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnSaveConfig) {
         btnSaveConfig.addEventListener('click', () => {
-            if (cfgGoogleUrl) APP_CONFIG.googleMapsUrl = cfgGoogleUrl.value.trim();
+            if (cfgEmpresa && cfgEmpresa.value.trim()) APP_CONFIG.empresa = cfgEmpresa.value.trim();
+            if (cfgSubtitulo) APP_CONFIG.subtitulo = cfgSubtitulo.value.trim();
+            if (cfgSitioWeb) APP_CONFIG.sitioWeb = cfgSitioWeb.value.trim();
+            if (cfgGoogleUrl && cfgGoogleUrl.value.trim()) APP_CONFIG.googleMapsUrl = cfgGoogleUrl.value.trim();
             if (cfgAdminPin && cfgAdminPin.value.trim().length >= 4) APP_CONFIG.adminPin = cfgAdminPin.value.trim();
             if (cfgSucursal) APP_CONFIG.sucursalDefault = cfgSucursal.value.trim();
+            
+            if (tempCustomLogoBase64 !== null) {
+                APP_CONFIG.logoCustom = tempCustomLogoBase64;
+            }
 
             localStorage.setItem('estol_calificador_config', JSON.stringify(APP_CONFIG));
+            applyBrandConfig();
             generateGoogleQR();
-            if (footerBranchText) footerBranchText.textContent = '📍 ' + APP_CONFIG.sucursalDefault;
-            if (btnDirectGoogleReview) btnDirectGoogleReview.href = APP_CONFIG.googleMapsUrl;
 
-            alert('¡Configuración guardada correctamente!');
+            alert('✅ ¡Marca y configuración guardadas con éxito!');
             if (adminConfigSection) adminConfigSection.style.display = 'none';
             if (adminDashboardSection) adminDashboardSection.style.display = 'block';
             loadAdminStats();

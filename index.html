@@ -351,22 +351,56 @@
 
                 <!-- PANTALLA 3: CONFIGURACIÓN -->
                 <div id="adminConfigSection" style="display: none; max-width: 600px; margin: 0 auto;">
-                    <h3 style="margin-bottom: 18px;">Configuración del Kiosk</h3>
+                    <h3 style="margin-bottom: 8px; font-size: 20px; color: #0f172a;">Personalización de Marca & Kiosk</h3>
+                    <p style="margin-bottom: 18px; font-size: 13px; color: #64748b;">Configura los datos y el logo de la empresa para personalizar el tótem.</p>
+                    
                     <div style="display: flex; flex-direction: column; gap: 14px;">
-                        <label style="font-weight: 600; font-size: 14px;">
-                            Enlace de Google Maps / Reseñas (se genera el QR):
-                            <input type="text" id="cfgGoogleUrl" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px;">
+                        <!-- Subida de Logo -->
+                        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 14px; display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 64px; height: 64px; border-radius: 10px; background: #ffffff; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                                <img id="cfgLogoPreview" src="" alt="Preview" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            </div>
+                            <div style="flex-grow: 1;">
+                                <label style="font-weight: 600; font-size: 13px; display: block; margin-bottom: 4px; color: #334155;">Logo de la Empresa:</label>
+                                <input type="file" id="cfgLogoFile" accept="image/*" style="font-size: 12px; max-width: 100%;">
+                            </div>
+                            <button type="button" id="btnResetLogo" class="btn-secondary" style="padding: 6px 12px; font-size: 11px;" title="Restablecer logo original">Restablecer</button>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <label style="font-weight: 600; font-size: 13px; color: #334155;">
+                                Nombre de la Empresa:
+                                <input type="text" id="cfgEmpresa" placeholder="Ej: Clínica San Martín" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px; font-size: 14px;">
+                            </label>
+                            <label style="font-weight: 600; font-size: 13px; color: #334155;">
+                                Subtítulo / Rubro:
+                                <input type="text" id="cfgSubtitulo" placeholder="Ej: Ortopedia & Salud" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px; font-size: 14px;">
+                            </label>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <label style="font-weight: 600; font-size: 13px; color: #334155;">
+                                Página Web de la Empresa:
+                                <input type="url" id="cfgSitioWeb" placeholder="https://tuempresa.com" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px; font-size: 14px;">
+                            </label>
+                            <label style="font-weight: 600; font-size: 13px; color: #334155;">
+                                Sucursal / Ubicación:
+                                <input type="text" id="cfgSucursal" placeholder="Ej: Casa Central" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px; font-size: 14px;">
+                            </label>
+                        </div>
+
+                        <label style="font-weight: 600; font-size: 13px; color: #334155;">
+                            Enlace de Google Maps / Reseñas (genera el código QR):
+                            <input type="text" id="cfgGoogleUrl" placeholder="https://maps.app.goo.gl/..." style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px; font-size: 14px;">
                         </label>
-                        <label style="font-weight: 600; font-size: 14px;">
-                            PIN de Administrador (4 dígitos):
-                            <input type="password" maxlength="6" id="cfgAdminPin" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px;">
+
+                        <label style="font-weight: 600; font-size: 13px; color: #334155;">
+                            PIN de Administrador (4 a 6 dígitos):
+                            <input type="password" maxlength="6" id="cfgAdminPin" placeholder="1234" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px; font-size: 14px;">
                         </label>
-                        <label style="font-weight: 600; font-size: 14px;">
-                            Nombre de la Sucursal:
-                            <input type="text" id="cfgSucursal" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 4px;">
-                        </label>
+
                         <div style="display: flex; gap: 10px; margin-top: 10px;">
-                            <button class="btn-primary" id="btnSaveConfig" style="padding: 12px 24px;">Guardar Cambios</button>
+                            <button class="btn-primary" id="btnSaveConfig" style="padding: 12px 24px; font-weight: 600;">💾 Guardar y Aplicar Cambios</button>
                             <button class="btn-secondary" id="btnBackToStats" style="padding: 12px 20px;">Volver a Estadísticas</button>
                         </div>
                     </div>
