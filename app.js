@@ -487,6 +487,40 @@ document.addEventListener('DOMContentLoaded', () => {
     if (footerAdminTrigger) footerAdminTrigger.addEventListener('click', openAdminModal);
     if (btnCloseAdminModal) btnCloseAdminModal.addEventListener('click', closeAdminModal);
 
+    // Manejador de Pantalla Completa
+    function toggleFullscreen() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen().catch(err => console.log('Fullscreen error:', err));
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(err => console.log('Exit fullscreen error:', err));
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    }
+
+    if (btnFullscreen) {
+        btnFullscreen.addEventListener('click', () => {
+            playClickSound();
+            toggleFullscreen();
+        });
+    }
+
+    if (btnSoundToggle) {
+        btnSoundToggle.addEventListener('click', () => {
+            APP_CONFIG.sonidoHabilitado = !APP_CONFIG.sonidoHabilitado;
+            btnSoundToggle.textContent = APP_CONFIG.sonidoHabilitado ? '🔊' : '🔇';
+            btnSoundToggle.classList.toggle('muted', !APP_CONFIG.sonidoHabilitado);
+            if (APP_CONFIG.sonidoHabilitado) playClickSound();
+        });
+    }
+
     // PIN Numpad logic
     function updatePinDisplay() {
         pinDots.forEach((dot, idx) => {
