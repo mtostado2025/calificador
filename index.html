@@ -26,7 +26,7 @@
         <header class="kiosk-header">
             <div class="brand-wrapper" id="brandLogoTrigger" title="Toca 3 veces para entrar como Administrador">
                 <div class="brand-logo-container">
-                    <img src="assets/logo.png" alt="Estol Equipos Médicos" class="brand-logo-img" onerror="this.src='assets/estol_logo.jpg'; this.onerror=null;">
+                    <img src="assets/logo.png" alt="Estol Equipos Médicos" class="brand-logo-img" onerror="if(!this.dataset.step){this.dataset.step=1;this.src='logo.png';}else if(this.dataset.step==1){this.dataset.step=2;this.src='assets/estol_logo.jpg';}else if(this.dataset.step==2){this.dataset.step=3;this.src='estol_logo.jpg';}else{this.style.display='none';}">
                 </div>
                 <div class="brand-info">
                     <h1 id="headerEmpresa">Estol Equipos Médicos</h1>
