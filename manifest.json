@@ -1,11 +1,15 @@
 {
-  "name": "Calificador Estol Equipos Médicos",
-  "short_name": "Estol CSAT",
+  "id": "/calificador/",
+  "name": "Calificador de Servicio Kiosk",
+  "short_name": "Calificador",
+  "description": "Sistema Kiosk de satisfacción del cliente y calificaciones",
   "start_url": "./index.html",
-  "display": "fullscreen",
+  "scope": "./",
+  "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f8fafc",
+  "background_color": "#0f172a",
   "theme_color": "#0f766e",
+  "categories": ["business", "productivity"],
   "icons": [
     {
       "src": "icon-192.png",
@@ -18,6 +22,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
